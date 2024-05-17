@@ -2,48 +2,56 @@
 
 import Link from 'next/link';
 import React, { useState } from 'react'
-
+import { FaHome, FaPhoneSquareAlt } from 'react-icons/fa';
+import { FaAddressBook, FaBuilding } from 'react-icons/fa6';
+import { IoClose } from 'react-icons/io5';
+import { MdWork } from 'react-icons/md';
 const SideBar = () => {
     const [isSidebarOpen, setSidebarOpen] = useState(false);
 
     const pages=[
         {
             title:"home",
+            icon:<FaHome/>,
             href:'/home'
         },
         {
             title:"about us",
+            icon:<FaAddressBook/>,
             href:'/about-us'
         },
         {
             title:"our works",
+            icon:<MdWork/>,
             href:'/our-works'
         },
         {
             title:"our services",
+            icon:<FaBuilding/>,
             href:'/our-services'
         },
         {
             title:"contact us",
+            icon:<FaPhoneSquareAlt/>,
             href:'/contact-us'
         },
 
 ]
 
-    // Function to toggle the sidebar's visibility
+    
     const toggleSidebar = () => {
       setSidebarOpen(!isSidebarOpen);
     };
   return (
     <>
-      {/* Button to Toggle Sidebar */}
+      
       <button
-        onClick={toggleSidebar} // Ensure this function toggles the sidebar's visibility
+        onClick={toggleSidebar} 
         data-drawer-target="default-sidebar"
         data-drawer-toggle="default-sidebar"
         aria-controls="default-sidebar"
         type="button"
-        className="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+        className="inline-flex items-center p-2 mt-2 ms-3 transition-all duration-500 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-primary hover:text-white   "
       >
         <span className="sr-only">Toggle sidebar</span>
         <svg className="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -51,28 +59,27 @@ const SideBar = () => {
         </svg>
       </button>
 
-      {/* Sidebar Component */}
       <aside id="default-sidebar" className={`fixed top-0 left-0 z-40 w-64 h-screen transition-transform transform ${isSidebarOpen? '' : '-translate-x-full'} sm:translate-x-0`} aria-label="Sidebar">
       <button
         onClick={toggleSidebar}
-        className={`absolute top-2 right-4  sm:hidden`}
+        className={`absolute text-white top-2 right-4  sm:hidden`}
       >
-        X
+        <IoClose/>
       </button>
         <div className="h-full px-3 py-7 overflow-y-auto   bg-primary">
           <ul className="space-y-2 font-medium">
             {pages.map((e,i)=>{
                 return(
                     <li key={i} >
-              <Link href={e.href} className="flex text-xl items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+              <Link href={e.href} className="flex gap-3 text-xl items-center p-2 text-white transition-all duration-500 900 rounded-lg hover:text-primary hover:bg-white group">
+                {e.icon}
                 {e.title}
+               
               </Link>
             </li>
                 )
             })}
             
-            {/* Additional Navigation Links */}
-            {/*... */}
           </ul>
         </div>
       </aside>
