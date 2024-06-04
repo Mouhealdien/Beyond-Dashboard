@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import SideBar from "../components/SideBar";
-
+import Providers from "@/components/Provider";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -17,14 +19,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={ " font-['Poppins']"}>
-      <SideBar/>
-      <div className="p-4 sm:ml-64">
-      {children}
-   </div>
-        
-        
-        </body>
+      <body className={" bg-third font-['Poppins']"}>
+        <Providers>
+          <ToastContainer />
+          <SideBar />
+          <div className="p-4 text-fourth  sm:ml-64">{children}</div>
+        </Providers>
+      </body>
     </html>
   );
 }
