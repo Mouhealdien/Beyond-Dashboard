@@ -8,35 +8,57 @@ import {
 import React, { useEffect } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+
+type FormInput = {
+  phone: string;
+  email: string;
+  address_en: string;
+  address_ar: string;
+  linkedinLink: string;
+  facebookLink: string;
+  instagramLink: string;
+};
 const ContactInfo = () => {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [updateService] = useUpdateSharedMutation();
-  // eslint-disable-next-line react-hooks/rules-of-hooks
+
   const { data: shared } = useGetSharedQuery();
   console.log(shared);
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const { control, handleSubmit, reset } = useForm<Shared>({
+
+  const { control, handleSubmit, reset } = useForm<FormInput>({
     defaultValues: {},
   });
-  // eslint-disable-next-line react-hooks/rules-of-hooks
+
   useEffect(() => {
     if (shared) {
       const sharedData = shared?.data?.shared;
       reset({
         phone: sharedData.phone,
         email: sharedData.email,
-        address: sharedData.address,
+        address_en: sharedData.address.en,
+        address_ar: sharedData.address.ar,
         linkedinLink: sharedData.linkedinLink,
         facebookLink: sharedData.facebookLink,
         instagramLink: sharedData.instagramLink,
       });
     }
   }, [shared, reset]);
-  const onSubmit = async (data: Shared) => {
+  const onSubmit = async (data: FormInput) => {
     console.log(data);
+
+    const updatedData = {
+      phone: data.phone,
+      email: data.email,
+      address: {
+        en: data.address_en,
+        ar: data.address_ar,
+      },
+      linkedinLink: data.linkedinLink,
+      facebookLink: data.facebookLink,
+      instagramLink: data.instagramLink,
+    };
     await toast.promise(
       updateService({
-        formData: data,
+        formData: updatedData,
       }).unwrap(),
       {
         pending: "update is pending",
@@ -127,38 +149,54 @@ const ContactInfo = () => {
 
           <div className="flex  px-4 py-4 gap-5 flex-row w-full">
             <Controller
-              name="instagramLink"
+              name="address_en"
               control={control}
               render={({ field }) => (
                 <Input
                   inputProps={{
                     ...field,
-                    id: "instagramLink",
-                    name: "instagramLink",
+                    id: "address en",
+                    name: "address en",
                     type: "text",
-                    placeholder: "instagramLink",
+                    placeholder: "address en",
                   }}
-                  label={"instagramLink"}
+                  label={"address en"}
                 />
               )}
             />
             <Controller
-              name="address"
+              name="address_ar"
               control={control}
               render={({ field }) => (
                 <Input
                   inputProps={{
                     ...field,
-                    id: "address",
-                    name: "address",
+                    id: "address ar",
+                    name: "address ar",
                     type: "text",
-                    placeholder: "address",
+                    placeholder: "address ar",
                   }}
-                  label={"address"}
+                  label={"address ar"}
                 />
               )}
             />
           </div>
+          <Controller
+            name="instagramLink"
+            control={control}
+            render={({ field }) => (
+              <Input
+                inputProps={{
+                  ...field,
+                  id: "instagramLink",
+                  name: "instagramLink",
+                  type: "text",
+                  placeholder: "instagramLink",
+                }}
+                label={"instagramLink"}
+              />
+            )}
+          />
         </div>
         <button className="px-6 py-2 mx-2 my-2 hover:bg-white hover:border-primary border hover:text-primary rounded-full text-white bg-primary text-lg">
           {" "}

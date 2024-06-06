@@ -4,7 +4,7 @@ import DashboradTable from "./DashboradTable";
 import { useGetTestimonialsQuery } from "@/redux/services/api";
 
 const Testimonials = () => {
-  const headers = ["name", "job", "description", "img"];
+  const headers = ["name", "job", "description"];
 
   const { data, error, isLoading } = useGetTestimonialsQuery();
 

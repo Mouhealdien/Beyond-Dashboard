@@ -1,5 +1,8 @@
 export interface Evaluation {
-    htmlContent:string
+    htmlContent:{
+      en:string| null | undefined,
+      ar:string| null | undefined
+    }
   }
 
 

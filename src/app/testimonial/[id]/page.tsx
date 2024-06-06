@@ -6,6 +6,7 @@ import ImageUploader from "@/components/UploadImage";
 import {
   useGetTestimonialQuery,
   useUpdateTestimonialMutation,
+  useUploadImageMutation,
 } from "@/redux/services/api";
 import { useParams } from "next/navigation";
 import React, { useEffect } from "react";
@@ -25,9 +26,9 @@ const page = () => {
   const param = useParams();
 
   const [updateTestimonial] = useUpdateTestimonialMutation();
-
+  const [uploadImage] = useUploadImageMutation();
   const { data: testimonial } = useGetTestimonialQuery(param.id.toString());
-  console.log(testimonial);
+  //console.log(testimonial);
 
   const { control, handleSubmit, reset } = useForm<FormInput>({
     defaultValues: {},
@@ -49,6 +50,10 @@ const page = () => {
   }, [testimonial, reset]);
 
   const onSubmit: SubmitHandler<FormInput> = async (data) => {
+    const img = new FormData();
+    img.append("file", data.photo);
+    const image = await uploadImage(img);
+
     const UpdatedData: Testimonial = {
       name: {
         en: data.name_en,
@@ -62,7 +67,7 @@ const page = () => {
         en: data.description_en,
         ar: data.description_ar,
       },
-      img: data.photo,
+      img: image.data.link,
     };
     console.log(UpdatedData);
     await toast.promise(

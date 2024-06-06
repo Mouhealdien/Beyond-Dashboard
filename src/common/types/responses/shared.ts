@@ -1,7 +1,10 @@
 export type  Shared={
       phone: string
       email: string
-      address: string
+      address: {
+        en:string,
+        ar:string
+      }
       linkedinLink: string
       facebookLink: string
       instagramLink: string

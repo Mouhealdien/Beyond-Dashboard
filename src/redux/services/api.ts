@@ -8,6 +8,7 @@ import { TestimonialsResponse } from '@/common/types/requests/testimonials'
 import { Statistic, StatisticResponse } from '@/common/types/responses/statistic'
 import { Shared, SharedResponse } from '@/common/types/responses/shared'
 import { Evaluation, EvaluationResponse } from '@/common/types/responses/evaluation'
+import { Project, ProjectResponse, ProjectsResponse } from '@/common/types/responses/project'
 
 
 const Url=BASE_API_URL
@@ -123,6 +124,51 @@ export const Api = createApi({
               }), 
             }),
 
+
+            uploadImage: builder.mutation<any,any>({
+              query: (image) => ({
+                url: '/image-upload',
+                method: 'POST',
+                body: image,
+                //  headers: {
+                //     'Content-Type': 'multipart/form-data',
+                //   },
+              }),
+            }),
+
+            getProjects : builder.query<ProjectsResponse, void>({
+              query: () => `/admin/project`,
+            }),
+
+            getProject : builder.query<ProjectResponse, string>({
+              query: (id) => `/admin/project/${id}`,
+            }),
+
+            DeleteProject: builder.mutation<ProjectResponse, {  id:string}>({
+              query: ( id ) => ({
+                url: `/admin/project/${id}`,
+                method: 'DELETE',
+                
+                }), 
+              }),
+
+            updateProject: builder.mutation<ProjectResponse, { formData: Project, id:string}>({
+              query: ({ formData,id }) => ({
+                url: `/admin/project/${id}`,
+                method: 'PATCH',
+                body: formData,
+                }), 
+              }),
+
+
+              DeleteUser: builder.mutation<ProjectResponse, {  id:string}>({
+                query: ( id ) => ({
+                  url: `/user/${id}`,
+                  method: 'DELETE',
+                  
+                  }), 
+                }),
+
     
  
     //   createConfirmRequest: builder.mutation<
@@ -163,5 +209,11 @@ export const { useGetHomeQuery ,
     useGetSharedQuery,
     useUpdateSharedMutation,
     useGetEvaluationQuery,
-    useUpdateEvaluationMutation
+    useUpdateEvaluationMutation,
+    useUploadImageMutation,
+    useGetProjectQuery,
+    useGetProjectsQuery,
+    useUpdateProjectMutation,
+    useDeleteProjectMutation,
+     useDeleteUserMutation
   } = Api

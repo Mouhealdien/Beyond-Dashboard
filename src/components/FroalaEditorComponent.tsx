@@ -6,13 +6,12 @@ import "froala-editor/css/froala_editor.pkgd.min.css";
 import FroalaEditorView from "react-froala-wysiwyg/FroalaEditorView";
 
 type propsType = {
-  originalHtml?: string | undefined;
-  setUpdatedHtml: (html: any) => void;
+  originalHtml?: string | undefined | null;
+  previewerRef: HTMLPreElement;
 };
 
-const FroalaEditorComponent = ({ originalHtml, setUpdatedHtml }: propsType) => {
+const FroalaEditorComponent = ({ originalHtml, previewerRef }: propsType) => {
   const editorRef = useRef<any>(null);
-  const previewerRef = useRef<HTMLPreElement>(null);
 
   useEffect(() => {
     // Wait for the FroalaEditor library to be fully loaded
@@ -66,21 +65,14 @@ const FroalaEditorComponent = ({ originalHtml, setUpdatedHtml }: propsType) => {
             "imageInfo",
             "imageRemove",
           ],
-          imageUploadURL: "/UploadFiles",
+          imageUploadURL: "http://127.0.0.1:8080/image-upload",
           imageUploadParams: {
             id: "my_editor",
           },
         }}
       />
-      <pre id="eg-previewer" ref={previewerRef}></pre>
-      <FroalaEditorView />
-      <button
-        onClick={() => {
-          setUpdatedHtml(previewerRef.current?.textContent);
-        }}
-      >
-        Click
-      </button>
+      <pre className="hidden" id="eg-previewer" ref={previewerRef}></pre>
+      {/* <FroalaEditorView /> */}
     </div>
   );
 };

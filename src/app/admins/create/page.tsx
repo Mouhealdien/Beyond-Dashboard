@@ -1,22 +1,16 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 import Input from "@/components/Input";
 import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 interface IFormInput {
-  firstName: string;
-  lastName: string;
-  iceCreamType: { label: string; value: string };
+  email: string;
+  password: string;
 }
 
 const page = () => {
-  const {
-    control,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    watch,
-    reset,
-  } = useForm({
+  const { control, handleSubmit, reset } = useForm<IFormInput>({
     defaultValues: {},
   });
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
@@ -76,7 +70,7 @@ const page = () => {
         </div>
         <button className="px-6 py-2 mx-2 my-2 hover:bg-white hover:border-primary border hover:text-primary rounded-full text-white bg-primary text-lg">
           {" "}
-          edit
+          Create
         </button>
       </form>
     </div>

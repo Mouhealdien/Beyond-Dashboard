@@ -1,12 +1,32 @@
+"use client";
 import Link from "next/link";
 import React from "react";
+import { toast } from "react-toastify";
 
 type propsType = {
   headers?: string[];
   data?: any;
   editLink?: string;
+  isAdmin?: boolean;
+  isDelete?: boolean;
+  deleteMethod?: any;
 };
-const DashboradTable = ({ headers, data, editLink }: propsType) => {
+
+const DashboradTable = ({
+  headers,
+  data,
+  editLink,
+  isAdmin,
+  isDelete,
+  deleteMethod,
+}: propsType) => {
+  const handelClick = async (id: any) => {
+    await toast.promise(deleteMethod(id), {
+      pending: "Delete is pending",
+      success: "Delete resolved 👌",
+      error: "Delete rejected 🤯",
+    });
+  };
   return (
     <div className="relative max-w-[1000px] m-auto overflow-x-auto shadow-md sm:rounded-lg">
       <table className="w-full text-sm text-left rtl:text-right text-fourth">
@@ -25,14 +45,19 @@ const DashboradTable = ({ headers, data, editLink }: propsType) => {
           </tr>
         </thead>
         <tbody>
-          {data?.map((ob: {}, i: number) => {
+          {data?.map((ob: any, i: number) => {
             return (
               <tr
                 key={i}
                 className="odd:bg-white odd:text-fourth even:text-white even:bg-primary border-b "
               >
                 {Object.keys(ob).map((prop, propIndex) => {
-                  if (prop != "_id")
+                  if (
+                    prop != "_id" &&
+                    prop != "img" &&
+                    prop != "photo" &&
+                    prop != "content"
+                  )
                     return (
                       <td key={propIndex} className="px-6 py-4">
                         {` ${ob[prop]["en"] ? ob[prop]["en"] : ob[prop]}`}
@@ -41,12 +66,24 @@ const DashboradTable = ({ headers, data, editLink }: propsType) => {
                 })}
 
                 <td className="px-6 py-4">
-                  <Link
-                    href={`${editLink}/${ob?._id}`}
-                    className="font-medium  text-red-600 bg-white px-2 py-1 rounded-full   hover:underline"
-                  >
-                    Edit
-                  </Link>
+                  {!isAdmin && (
+                    <Link
+                      href={`${editLink}/${ob?._id}`}
+                      className="font-medium  text-red-600 bg-white px-2 py-1 rounded-full   hover:underline"
+                    >
+                      Edit
+                    </Link>
+                  )}
+                  {isDelete && (
+                    <button
+                      onClick={() => {
+                        handelClick(ob?._id);
+                      }}
+                      className="font-medium mx-3  text-red-600 bg-white px-2 py-1 rounded-full   hover:underline"
+                    >
+                      Delete
+                    </button>
+                  )}
                 </td>
               </tr>
             );
