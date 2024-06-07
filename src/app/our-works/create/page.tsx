@@ -10,6 +10,13 @@ import Select, { OptionsOrGroups, GroupBase } from "react-select";
 import FroalaEditorComponent from "@/components/FroalaEditorComponent";
 import ImageUploader from "@/components/UploadImage";
 import JoditEditorComponent from "@/components/JoditEditorComponent";
+import {
+  useAddProjectMutation,
+  useGetProjectQuery,
+  useUpdateProjectMutation,
+  useUploadImageMutation,
+} from "@/redux/services/api";
+import { Project } from "@/common/types/responses/project";
 interface OptionType {
   value: string;
   label: string;
@@ -18,13 +25,18 @@ interface OptionType {
 interface InputForm {
   title_en: string;
   title_ar: string;
-  category: string;
+  category: {
+    label: string;
+    value: string;
+  };
   photo: string;
 }
 const page = () => {
-  const param = useParams();
-  const previewerRefEn = useRef<HTMLPreElement>(null);
-  const previewerRefAr = useRef<HTMLPreElement>(null);
+  const editorEn = useRef(null);
+  const editorAr = useRef(null);
+
+  const [addProject] = useAddProjectMutation();
+  const [uploadImage] = useUploadImageMutation();
 
   const selectStyle = {
     placeholder: (provided: any) => ({
@@ -51,59 +63,56 @@ const page = () => {
     borderRadius: 0,
     colors: {
       ...theme.colors,
-      primary: "#1479FF",
+      primary: "#202EFF",
     },
   });
 
   const categories: OptionsOrGroups<OptionType, GroupBase<OptionType>> = [
-    { value: "socialMediaManagement", label: "socialMediaManagement" },
+    { value: "case_studies", label: "Case Studies" },
     {
-      value: "marketingStrategyDevelopment",
-      label: "marketingStrategyDevelopment",
+      value: "strategy_planning",
+      label: "Strategy Planning",
     },
-    { value: "analyticsAndEvaluation", label: "analyticsAndEvaluation" },
-    { value: "designAndProduction", label: "designAndProduction" },
+    { value: "brand_development", label: "Brand Development" },
+    { value: "content_marketing", label: "Content Marketing" },
+    { value: "analytics", label: "Analytics" },
+    { value: "social_media", label: "Social Media" },
   ];
-
-  //  const [updateProject] = useUpdateProjectMutation();
-  //  const { data: project } = useGetProjectQuery(param.edit);
 
   const { control, handleSubmit, reset } = useForm<InputForm>({
     defaultValues: {},
   });
-  //  useEffect(() => {
-  //    if (project) {
-  //      reset({
-  //        Title_en: service.data.service.title.en,
-  //        Title_ar: service.data.service.title.ar,
-  //        paragraph_en: service.data.service.paragraph.en,
-  //        paragraph_ar: service.data.service.paragraph.ar,
-  //      });
-  //    }
-  //  }, [project, reset]);
+
   const onSubmit = async (data: any) => {
+    let image = "";
+    // if (typeof data.photo == "string") {
+    //   image = data.photo;
+    // } else {}
+    const img = new FormData();
+    img.append("file", data.photo);
+    const imageObject = await uploadImage(img);
+    console.log(imageObject);
+    image = imageObject?.data.link;
+
     console.log(data);
-    //    const UpdatedData: Service = {
-    //      title: {
-    //        en: data.Title_en,
-    //        ar: data.Title_ar,
-    //      },
-    //      paragraph: {
-    //        en: data.paragraph_en,
-    //        ar: data.paragraph_ar,
-    //      },
-    //    };
-    //    await toast.promise(
-    //      updateService({
-    //        formData: UpdatedData,
-    //        id: param.service.toString(),
-    //      }).unwrap(),
-    //      {
-    //        pending: "update is pending",
-    //        success: "update resolved 👌",
-    //        error: "update rejected 🤯",
-    //      }
-    //    );
+    const UpdatedData: Project = {
+      title: {
+        en: data.title_en,
+        ar: data.title_ar,
+      },
+      content: {
+        en: editorEn?.current.value,
+        ar: editorAr?.current.value,
+      },
+      category: data.category.value,
+      photo: image,
+    };
+    console.log(UpdatedData);
+    await toast.promise(addProject(UpdatedData).unwrap(), {
+      pending: "update is pending",
+      success: "update resolved 👌",
+      error: "update rejected 🤯",
+    });
   };
 
   return (
@@ -173,30 +182,23 @@ const page = () => {
             rules={{ required: true }}
             name="photo"
             render={({ field: { onChange } }) => (
-              <ImageUploader defaultValue={""} onChange={onChange} />
+              <ImageUploader onChange={onChange} />
             )}
           />
+
           <div>
             <h2 className="text-4xl py-10">English</h2>
-            <JoditEditorComponent
-            // ar={false}
-            // editor={editorEn}
-            // originalHtml={data?.data.evaluation.htmlContent?.en}
-            />
+            <JoditEditorComponent ar={false} editor={editorEn} />
           </div>
 
           <div>
             <h2 className="text-4xl py-10">Arabic</h2>
-            <JoditEditorComponent
-            // ar={true}
-            // editor={editorAr}
-            // originalHtml={data?.data.evaluation.htmlContent?.ar}
-            />
+            <JoditEditorComponent ar={true} editor={editorAr} />
           </div>
         </div>
         <button className="px-6 py-2 mx-2 my-2 hover:bg-white hover:border-primary border hover:text-primary rounded-full text-white bg-primary text-lg">
           {" "}
-          Create
+          Add
         </button>
       </form>
     </div>

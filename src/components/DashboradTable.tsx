@@ -56,7 +56,8 @@ const DashboradTable = ({
                     prop != "_id" &&
                     prop != "img" &&
                     prop != "photo" &&
-                    prop != "content"
+                    prop != "content" &&
+                    prop != "__v"
                   )
                     return (
                       <td key={propIndex} className="px-6 py-4">

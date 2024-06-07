@@ -1,7 +1,13 @@
 import React, { useRef, useEffect, useState } from "react";
 import JoditEditor from "jodit-react";
 
-const JoditEditorComponent: React.FC = ({ editor, originalHtml, ar }) => {
+type propsType = {
+  editor: any;
+  originalHtml?: string;
+  ar: boolean;
+};
+
+const JoditEditorComponent = ({ editor, originalHtml, ar }: propsType) => {
   //const editor = useRef(null);
   const [dir, setDir] = useState(false);
 

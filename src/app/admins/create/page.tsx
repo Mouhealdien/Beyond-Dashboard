@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 import Input from "@/components/Input";
+import { useAddUserMutation } from "@/redux/services/api";
 import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -13,14 +14,16 @@ const page = () => {
   const { control, handleSubmit, reset } = useForm<IFormInput>({
     defaultValues: {},
   });
+
+  const [addUser] = useAddUserMutation();
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     console.log(data);
 
-    // await toast.promise(updateService({ formData: data }).unwrap(), {
-    // 	error: t('could-not-update'),
-    // 	pending: t('trying-to-update'),
-    // 	success: t('updated-successfully') as string,
-    // });
+    await toast.promise(addUser(data).unwrap(), {
+      pending: "update is pending",
+      success: "update resolved 👌",
+      error: "update rejected 🤯",
+    });
   };
 
   return (
@@ -43,7 +46,6 @@ const page = () => {
                     name: "email",
                     type: "text",
                     placeholder: "email",
-                    defaultValue: `${"x"}`,
                   }}
                   label={"email"}
                 />
@@ -60,7 +62,6 @@ const page = () => {
                     name: "password",
                     type: "text",
                     placeholder: "password",
-                    defaultValue: `${"x"}`,
                   }}
                   label={"password"}
                 />

@@ -9,6 +9,7 @@ import { Statistic, StatisticResponse } from '@/common/types/responses/statistic
 import { Shared, SharedResponse } from '@/common/types/responses/shared'
 import { Evaluation, EvaluationResponse } from '@/common/types/responses/evaluation'
 import { Project, ProjectResponse, ProjectsResponse } from '@/common/types/responses/project'
+import { User } from '@/common/types/responses/user'
 
 
 const Url=BASE_API_URL
@@ -46,11 +47,11 @@ export const Api = createApi({
         query: () => `/admin/contact-us/messages`,
       }),
 
-    updateMessage: builder.mutation<MessagesResponse, { formData: ContactFormData; id: string }>({
-      query: ({ formData, id }) => ({
+    updateMessage: builder.mutation<MessagesResponse,  string >({
+      query: ( id ) => ({
 				url: `/admin/contact-us/messages/${id}/seen`,
 				method: 'PATCH',
-				body: formData,
+				body:  id ,
 			  }), 
       }),
       getTestimonial: builder.query<Testimonial,string >({
@@ -143,6 +144,15 @@ export const Api = createApi({
             getProject : builder.query<ProjectResponse, string>({
               query: (id) => `/admin/project/${id}`,
             }),
+            
+            
+            addProject: builder.mutation<ProjectResponse,Project>({
+              query: (formData) => ({
+                url: '/admin/project',
+                method: 'POST',
+                body: formData,
+              }),
+            }),
 
             DeleteProject: builder.mutation<ProjectResponse, {  id:string}>({
               query: ( id ) => ({
@@ -161,12 +171,28 @@ export const Api = createApi({
               }),
 
 
-              DeleteUser: builder.mutation<ProjectResponse, {  id:string}>({
+              DeleteUser: builder.mutation<any, string>({
                 query: ( id ) => ({
-                  url: `/user/${id}`,
+                  url: `/admin/${id}`,
                   method: 'DELETE',
                   
                   }), 
+                }),
+
+
+                addUser: builder.mutation<any,User>({
+                  query: (formData) => ({
+                    url: '/admin',
+                    method: 'POST',
+                    body: formData,
+                    //  headers: {
+                    //     'Content-Type': 'application/json',
+                    //   },
+                  }),
+                }),
+
+                getUsers : builder.query<any, void>({
+                  query: () => `/admin`,
                 }),
 
     
@@ -215,5 +241,9 @@ export const { useGetHomeQuery ,
     useGetProjectsQuery,
     useUpdateProjectMutation,
     useDeleteProjectMutation,
-     useDeleteUserMutation
+    useDeleteUserMutation,
+    useAddProjectMutation,
+    useGetUsersQuery,
+    useAddUserMutation
+    
   } = Api
