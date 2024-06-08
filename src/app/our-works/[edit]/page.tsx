@@ -15,6 +15,7 @@ import {
   useUploadImageMutation,
 } from "@/redux/services/api";
 import { Project } from "@/common/types/responses/project";
+import { getPhotoUrl } from "@/util/util";
 interface OptionType {
   value: string;
   label: string;
@@ -34,7 +35,9 @@ const page = () => {
   const editorEn = useRef(null);
   const editorAr = useRef(null);
 
-  const { data: project } = useGetProjectQuery(param.edit.toString());
+  const { data: project, isFetching } = useGetProjectQuery(
+    param.edit.toString()
+  );
   const [updateProject] = useUpdateProjectMutation();
   const [uploadImage] = useUploadImageMutation();
   console.log(project?.data.project);
@@ -136,7 +139,7 @@ const page = () => {
       }
     );
   };
-
+  if (isFetching) return <h1>Loading...</h1>;
   return (
     <div>
       <form
@@ -206,7 +209,7 @@ const page = () => {
             name="photo"
             render={({ field: { onChange } }) => (
               <ImageUploader
-                defaultValue={ProjectData?.photo}
+                defaultValue={getPhotoUrl(ProjectData!.photo)}
                 onChange={onChange}
               />
             )}

@@ -39,7 +39,7 @@ const LoginForm = () => {
         <h1 className="text-4xl font-bold text-center mb-4 text-primary">
           Beyond
         </h1>
-        <form onSubmit={handleSubmit(onSubmit)} action="#">
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex  px-4 py-4 gap-5 flex-col w-full">
             <Controller
               name="email"
