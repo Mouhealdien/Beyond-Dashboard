@@ -45,8 +45,6 @@ const JoditEditorComponent = ({ editor, originalHtml, ar }: propsType) => {
       "underline",
       "strikethrough",
       "eraser",
-      "ul",
-      "ol",
       "outdent",
       "indent",
       "fontsize",

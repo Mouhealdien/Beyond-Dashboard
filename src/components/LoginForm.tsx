@@ -26,7 +26,7 @@ const LoginForm = () => {
     try {
       const userData = await login(data).unwrap();
       dispatch(setToken(userData.token));
-      localStorage.setItem("token", userData.token);
+      sessionStorage.setItem("token", userData.token);
       router.push("/"); // Redirect to the dashboard
     } catch (err) {
       console.error("Failed to login: ", err);
@@ -35,7 +35,7 @@ const LoginForm = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center w-full ">
-      <div className="bg-white shadow-md rounded-lg px-8 py-6 w-[50%]">
+      <div className="bg-white shadow-md rounded-lg px-8 py-6 w-full lg:w-[50%]">
         <h1 className="text-4xl font-bold text-center mb-4 text-primary">
           Beyond
         </h1>
