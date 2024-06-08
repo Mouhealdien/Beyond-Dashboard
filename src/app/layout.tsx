@@ -8,6 +8,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/router";
 import { usePathname } from "next/navigation";
+import AuthLayout from "@/components/AuthLayout";
 const inter = Inter({ subsets: ["latin"] });
 
 // export const metadata: Metadata = {
@@ -42,9 +43,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={" bg-third font-['Poppins']"}>
         <Providers>
-          <ToastContainer />
-          <SideBar />
-          <div className="p-4 text-fourth  sm:ml-64">{children}</div>
+          <AuthLayout>
+            <ToastContainer />
+            <SideBar />
+            <div className="p-4 text-fourth  sm:ml-64">{children}</div>
+          </AuthLayout>
         </Providers>
       </body>
     </html>

@@ -9,13 +9,9 @@ import {
   useGetEvaluationQuery,
   useUpdateEvaluationMutation,
 } from "@/redux/services/api";
-import dynamic from "next/dynamic";
 import React, { useRef } from "react";
 import { toast } from "react-toastify";
-const FroalaEditorComponent = dynamic(
-  () => import("../../components/FroalaEditorComponent"),
-  { ssr: false }
-);
+
 const page = () => {
   const { data, error, isLoading } = useGetEvaluationQuery();
   const [updateEvaluation] = useUpdateEvaluationMutation();

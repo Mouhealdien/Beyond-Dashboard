@@ -7,7 +7,6 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { useParams } from "next/navigation";
 import Select, { OptionsOrGroups, GroupBase } from "react-select";
-import FroalaEditorComponent from "@/components/FroalaEditorComponent";
 import ImageUploader from "@/components/UploadImage";
 import JoditEditorComponent from "@/components/JoditEditorComponent";
 import {

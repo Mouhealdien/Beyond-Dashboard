@@ -7,6 +7,7 @@ type imageProp = {
 };
 
 const ImageUploader = ({ onChange, defaultValue }: imageProp) => {
+  console.log(defaultValue);
   const [image, setImage] = useState(defaultValue || "");
   const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];

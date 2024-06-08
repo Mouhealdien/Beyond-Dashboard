@@ -10,12 +10,22 @@ import { Shared, SharedResponse } from '@/common/types/responses/shared'
 import { Evaluation, EvaluationResponse } from '@/common/types/responses/evaluation'
 import { Project, ProjectResponse, ProjectsResponse } from '@/common/types/responses/project'
 import { User } from '@/common/types/responses/user'
+import { RootState } from '../store'
 
 
 const Url=BASE_API_URL
 export const Api = createApi({
   reducerPath: 'Api',
-  baseQuery: fetchBaseQuery({ baseUrl: BASE_API_URL }),
+  baseQuery: fetchBaseQuery({ 
+    baseUrl: BASE_API_URL,
+    prepareHeaders: (headers, { getState }) => {
+      const token = (getState() as RootState).auth.token;
+      if (token) {
+        headers.set('authorization', `Bearer ${token}`);
+      }
+      return headers;
+    },
+   }),
   endpoints: (builder) => ({
     getHome: builder.query<HomeResponse, void>({
       query: () => `/admin/home`,
@@ -195,21 +205,15 @@ export const Api = createApi({
                   query: () => `/admin`,
                 }),
 
-    
- 
-    //   createConfirmRequest: builder.mutation<
-		// 	confirmRequest,
-		// 	requestConfirmInput
-		// >({
-		// 	query: (requestBody) => ({
-		// 		url: '/request-confirm',
-		// 		method: 'POST',
-		// 		body: JSON.stringify(requestBody),
-		// 		headers: {
-		// 			'Content-Type': 'application/json',
-		// 		},
-		// 	}),
-		// }),
+                login: builder.mutation({
+                  query: (credentials) => ({
+                    url: '/admin/login',
+                    method: 'POST',
+                    body: credentials,
+                  }),
+                }),
+
+  
 
 
   }),
@@ -244,6 +248,7 @@ export const { useGetHomeQuery ,
     useDeleteUserMutation,
     useAddProjectMutation,
     useGetUsersQuery,
-    useAddUserMutation
+    useAddUserMutation,
+    useLoginMutation
     
   } = Api

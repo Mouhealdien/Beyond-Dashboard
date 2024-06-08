@@ -1,7 +1,12 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import Input from "./Input";
+import { useLoginMutation } from "@/redux/services/api";
+import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
+import { setToken } from "@/redux/features/authSlice";
 
 type FormInput = {
   email: string;
@@ -13,7 +18,21 @@ const LoginForm = () => {
     defaultValues: {},
   });
 
-  const onSubmit: SubmitHandler<FormInput> = async (data) => {};
+  const [login, { isLoading }] = useLoginMutation();
+  const dispatch = useDispatch();
+  const router = useRouter();
+
+  const onSubmit = async (data) => {
+    try {
+      const userData = await login(data).unwrap();
+      dispatch(setToken(userData.token));
+      localStorage.setItem("token", userData.token);
+      router.push("/"); // Redirect to the dashboard
+    } catch (err) {
+      console.error("Failed to login: ", err);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center w-full ">
       <div className="bg-white shadow-md rounded-lg px-8 py-6 w-[50%]">
