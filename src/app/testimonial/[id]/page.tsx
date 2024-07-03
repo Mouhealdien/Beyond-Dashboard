@@ -50,10 +50,13 @@ const page = () => {
   }, [testimonial, reset]);
 
   const onSubmit: SubmitHandler<FormInput> = async (data) => {
-    const img = new FormData();
-    img.append("file", data.photo);
-    const image = await uploadImage(img);
-
+    let image = {};
+    console.log(typeof data.photo);
+    if (typeof data.photo == "object") {
+      const img = new FormData();
+      img.append("file", data.photo);
+      image = await uploadImage(img);
+    }
     const UpdatedData: Testimonial = {
       name: {
         en: data.name_en,
@@ -67,7 +70,10 @@ const page = () => {
         en: data.description_en,
         ar: data.description_ar,
       },
-      img: image.data.link,
+      img:
+        typeof data.photo == "object"
+          ? image.data.link
+          : testimonial?.data.testimonials.img,
     };
     console.log(UpdatedData);
     await toast.promise(
